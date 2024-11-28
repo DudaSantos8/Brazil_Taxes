@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: API_Impostos_Brasil
+server:
+  servlet:
+    context-path: /api/impostos
