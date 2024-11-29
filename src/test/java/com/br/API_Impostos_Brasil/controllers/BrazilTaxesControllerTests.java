@@ -16,6 +16,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @WebMvcTest(BrazilTaxesController.class)
 public class BrazilTaxesControllerTests {
     @MockitoBean
@@ -26,6 +29,8 @@ public class BrazilTaxesControllerTests {
 
     private ObjectMapper mapper;
     private TaxesDto taxesDto;
+    private List<TaxesDto> dtoList = new ArrayList<>();
+
 
     @BeforeEach
     public void setUp(){
@@ -36,6 +41,7 @@ public class BrazilTaxesControllerTests {
         taxesDto.setName("IPI");
         taxesDto.setDescription("Imposto sobre Produtos Industrializados");
         taxesDto.setAliquota(12);
+        dtoList.add(taxesDto);
     }
 
     @Test
@@ -73,4 +79,19 @@ public class BrazilTaxesControllerTests {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description", CoreMatchers.is("Imposto sobre Produtos Industrializados")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.aliquota", CoreMatchers.is(12.0)));
     }
+
+@Test
+public void testCaseGetAllTaxes() throws Exception {
+    Mockito.when(service.getAllTaxes()).thenReturn(dtoList);
+
+    mockMvc.perform(
+            MockMvcRequestBuilders
+                    .get("/tipos")
+                    .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(dtoList.size()))
+            .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(dtoList.get(0).getId()))
+            .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value(dtoList.get(0).getName()));
+}
 }
