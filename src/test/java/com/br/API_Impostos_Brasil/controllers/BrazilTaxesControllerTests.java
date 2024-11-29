@@ -1,5 +1,8 @@
 package com.br.API_Impostos_Brasil.controllers;
 
+import com.br.API_Impostos_Brasil.controllers.dtos.TaxesDto;
+import com.br.API_Impostos_Brasil.controllers.dtos.TaxesRegisterDto;
+import com.br.API_Impostos_Brasil.services.BrazilTaxesService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,13 +35,13 @@ public class BrazilTaxesControllerTests {
         taxesDto.setId(1);
         taxesDto.setName("IPI");
         taxesDto.setDescription("Imposto sobre Produtos Industrializados");
-        taxesDto.setAliquota(12.0);
+        taxesDto.setAliquota(12);
     }
 
     @Test
     public void testCaseErrorFreeTaxRegister() throws Exception {
 
-        TaxesRegisterDto registerDto = new TaxesRegisterDto("IPI", "Imposto sobre Produtos Industrializados", 12.0);
+        TaxesRegisterDto registerDto = new TaxesRegisterDto("IPI", "Imposto sobre Produtos Industrializados", 12);
         String json = mapper.writeValueAsString(registerDto);
 
         Mockito.when(service.registerTax(Mockito.any(TaxesDto.class))).thenReturn(taxesDto);
