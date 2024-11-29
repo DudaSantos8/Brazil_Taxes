@@ -1,5 +1,6 @@
 package com.br.API_Impostos_Brasil.controllers;
 
+import com.br.API_Impostos_Brasil.controllers.dtos.TaxesDto;
 import com.br.API_Impostos_Brasil.controllers.dtos.TaxesRegisterDto;
 import com.br.API_Impostos_Brasil.services.BrazilTaxesService;
 import com.br.API_Impostos_Brasil.services.mappers.MapperTaxes;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -32,5 +34,10 @@ public class BrazilTaxesController {
         }catch (Exception exception){
             return ResponseEntity.status(404).build();
         }
+    }
+
+    @GetMapping
+    public List<TaxesDto> getAllTaxes(){
+        return service.getAllTaxes();
     }
 }
