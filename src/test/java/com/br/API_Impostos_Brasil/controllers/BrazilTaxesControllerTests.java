@@ -26,6 +26,7 @@ public class BrazilTaxesControllerTests {
 
     private ObjectMapper mapper;
     private TaxesDto taxesDto;
+    private CalculationTaxResponseDto calculationTaxResponseDto;
 
     @BeforeEach
     public void setUp(){
@@ -36,6 +37,13 @@ public class BrazilTaxesControllerTests {
         taxesDto.setName("IPI");
         taxesDto.setDescription("Imposto sobre Produtos Industrializados");
         taxesDto.setAliquota(12);
+
+        this.calculationTaxResponseDto = new CalculationTaxResponseDto();
+        calculationTaxResponseDto.setTypeTax("IPI");
+        calculationTaxResponseDto.setbaseValue(1000);
+        calculationTaxResponseDto.setAliquota(12);
+        calculationTaxResponseDto.setValueTax(120);
+
     }
 
     @Test
@@ -59,15 +67,38 @@ public class BrazilTaxesControllerTests {
     }
 
     // tests for get by id and calculation
-/*    @Test
-    public void testCaseSearchTaxById(){
-        TaxesDto taxesDtoResponse = service.findById(1);
-        assertEquals(taxesDto, taxesDtoResponse);
+    @Test
+    public void testCaseSearchTaxById() throws Exception {
+        Mockito.when(service.findById(taxesDto.getId())).thenReturn(taxesDto);
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders
+                                .get("/tipos"+ taxesDto.getId())
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id", CoreMatchers.is(taxesDto.getId())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name", CoreMatchers.is("IPI")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.description", CoreMatchers.is("Imposto sobre Produtos Industrializados")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.aliquota", CoreMatchers.is(12.0)));
     }
 
     @Test
-    public void testCaseCorrectCalculation(){
-        float result = service.calculationTaxes(taxesDto.getId(), 1000);
-        assertEquals(120, result);
-    }*/
+    public void testCaseCorrectCalculation() throws Exception {
+        CalculationTaxDto calculationTaxDto = new CalculationTaxDto(1, 1000);
+        String json = mapper.writeValueAsString(calculationTaxDto);
+
+        Mockito.when(service.calculationTaxes(Mockito.any(CalculationTaxDto.class))).thenReturn(calculationTaxResponseDto);
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders
+                                .post("/calculo")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(json))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.typeTax", CoreMatchers.is(calculationTaxResponseDto.getTypeTax())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.baseValue", CoreMatchers.is(calculationTaxResponseDto.getBaseValue)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.aliquota", CoreMatchers.is(calculationTaxResponseDto.getAliquota)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.valueTax", CoreMatchers.is(calculationTaxResponseDto.getValueTax)));
+
+    }
 }
