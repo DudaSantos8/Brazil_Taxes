@@ -57,4 +57,17 @@ public class BrazilTaxesControllerTests {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description", CoreMatchers.is("Imposto sobre Produtos Industrializados")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.aliquota", CoreMatchers.is(12.0)));
     }
+
+    // tests for get by id and calculation
+/*    @Test
+    public void testCaseSearchTaxById(){
+        TaxesDto taxesDtoResponse = service.findById(1);
+        assertEquals(taxesDto, taxesDtoResponse);
+    }
+
+    @Test
+    public void testCaseCorrectCalculation(){
+        float result = service.calculationTaxes(taxesDto.getId(), 1000);
+        assertEquals(120, result);
+    }*/
 }
