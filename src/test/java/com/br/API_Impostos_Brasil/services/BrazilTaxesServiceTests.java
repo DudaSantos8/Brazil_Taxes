@@ -1,4 +1,4 @@
-package com.br.API_Impostos_Brasil;
+package com.br.API_Impostos_Brasil.services;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

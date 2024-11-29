@@ -1,4 +1,4 @@
-package com.br.API_Impostos_Brasil;
+package com.br.API_Impostos_Brasil.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.CoreMatchers;
