@@ -73,7 +73,7 @@ public class BrazilTaxesControllerTests {
 
         mockMvc.perform(
                         MockMvcRequestBuilders
-                                .get("/tipos"+ taxesDto.getId())
+                                .get("/tipos/"+ taxesDto.getId())
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", CoreMatchers.is(taxesDto.getId())))
