@@ -1,5 +1,7 @@
 package com.br.API_Impostos_Brasil.services;
 
+import com.br.API_Impostos_Brasil.controllers.CalculationTaxDto;
+import com.br.API_Impostos_Brasil.controllers.CalculationTaxResponseDto;
 import com.br.API_Impostos_Brasil.controllers.dtos.TaxesDto;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +17,18 @@ public class BrazilTaxesService {
         return taxesDto;
     }
 
-    public float calculationTaxes(int id, int baseValue) {
-        TaxesDto taxesDto = findById(id);
-        float aliquota = taxesDto.getAliquota();
-        return (baseValue * aliquota) /100;
+    public CalculationTaxResponseDto calculationTaxes(CalculationTaxDto calculationTaxDto) {
+        TaxesDto taxesDto = findById(calculationTaxDto.getTypeTaxId());
+        float calculation = (taxesDto.getAliquota() * calculationTaxDto.getBaseValue()) / 100;
+
+        CalculationTaxResponseDto responseDto = new CalculationTaxResponseDto();
+
+        responseDto.setTypeTax(taxesDto.getName());
+        responseDto.setBaseValue(calculationTaxDto.getBaseValue());
+        responseDto.setAliquota(taxesDto.getAliquota());
+        responseDto.setValueTax(calculation);
+
+        return responseDto;
     }
 
     public TaxesDto findById(int id) {
