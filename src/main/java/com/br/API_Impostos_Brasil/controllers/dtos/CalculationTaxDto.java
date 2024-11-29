@@ -1,4 +1,4 @@
-package com.br.API_Impostos_Brasil.controllers;
+package com.br.API_Impostos_Brasil.controllers.dtos;
 
 import lombok.Data;
 

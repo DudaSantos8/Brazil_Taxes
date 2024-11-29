@@ -1,7 +1,7 @@
 package com.br.API_Impostos_Brasil.services;
 
-import com.br.API_Impostos_Brasil.controllers.CalculationTaxDto;
-import com.br.API_Impostos_Brasil.controllers.CalculationTaxResponseDto;
+import com.br.API_Impostos_Brasil.controllers.dtos.CalculationTaxDto;
+import com.br.API_Impostos_Brasil.controllers.dtos.CalculationTaxResponseDto;
 import com.br.API_Impostos_Brasil.controllers.dtos.TaxesDto;
 import org.springframework.stereotype.Service;
 

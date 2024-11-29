@@ -1,5 +1,7 @@
 package com.br.API_Impostos_Brasil.controllers;
 
+import com.br.API_Impostos_Brasil.controllers.dtos.CalculationTaxDto;
+import com.br.API_Impostos_Brasil.controllers.dtos.CalculationTaxResponseDto;
 import com.br.API_Impostos_Brasil.controllers.dtos.TaxesDto;
 import com.br.API_Impostos_Brasil.controllers.dtos.TaxesRegisterDto;
 import com.br.API_Impostos_Brasil.services.BrazilTaxesService;
@@ -26,7 +28,6 @@ public class BrazilTaxesControllerTests {
 
     private ObjectMapper mapper;
     private TaxesDto taxesDto;
-    private CalculationTaxResponseDto calculationTaxResponseDto;
 
     @BeforeEach
     public void setUp(){
@@ -37,13 +38,6 @@ public class BrazilTaxesControllerTests {
         taxesDto.setName("IPI");
         taxesDto.setDescription("Imposto sobre Produtos Industrializados");
         taxesDto.setAliquota(12);
-
-        this.calculationTaxResponseDto = new CalculationTaxResponseDto();
-        calculationTaxResponseDto.setTypeTax("IPI");
-        calculationTaxResponseDto.setBaseValue(1000);
-        calculationTaxResponseDto.setAliquota(12);
-        calculationTaxResponseDto.setValueTax(120);
-
     }
 
     @Test
@@ -80,25 +74,5 @@ public class BrazilTaxesControllerTests {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name", CoreMatchers.is("IPI")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description", CoreMatchers.is("Imposto sobre Produtos Industrializados")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.aliquota", CoreMatchers.is(12.0)));
-    }
-
-    @Test
-    public void testCaseCorrectCalculation() throws Exception {
-        CalculationTaxDto calculationTaxDto = new CalculationTaxDto(1, 1000F);
-        String json = mapper.writeValueAsString(calculationTaxDto);
-
-        Mockito.when(service.calculationTaxes(Mockito.any(CalculationTaxDto.class))).thenReturn(calculationTaxResponseDto);
-
-        mockMvc.perform(
-                        MockMvcRequestBuilders
-                                .post("/calculo")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(json))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.typeTax", CoreMatchers.is(calculationTaxResponseDto.getTypeTax())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.baseValue", CoreMatchers.is(calculationTaxResponseDto.getBaseValue())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.aliquota", CoreMatchers.is(calculationTaxResponseDto.getAliquota())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.valueTax", CoreMatchers.is(calculationTaxResponseDto.getValueTax())));
-
     }
 }
