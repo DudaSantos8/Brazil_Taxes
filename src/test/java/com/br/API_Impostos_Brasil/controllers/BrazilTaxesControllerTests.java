@@ -1,7 +1,5 @@
 package com.br.API_Impostos_Brasil.controllers;
 
-import com.br.API_Impostos_Brasil.controllers.dtos.CalculationTaxDto;
-import com.br.API_Impostos_Brasil.controllers.dtos.CalculationTaxResponseDto;
 import com.br.API_Impostos_Brasil.controllers.dtos.TaxesDto;
 import com.br.API_Impostos_Brasil.controllers.dtos.TaxesRegisterDto;
 import com.br.API_Impostos_Brasil.services.BrazilTaxesService;

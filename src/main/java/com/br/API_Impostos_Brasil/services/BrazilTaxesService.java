@@ -41,4 +41,8 @@ public class BrazilTaxesService {
         }
         throw new RuntimeException("Tax type not found");
     }
+
+    public List<TaxesDto> getAllTaxes() {
+        return dtoList;
+    }
 }
