@@ -45,4 +45,14 @@ public class BrazilTaxesService {
     public List<TaxesDto> getAllTaxes() {
         return dtoList;
     }
+
+    public List<TaxesDto> deleteTaxes(int id) {
+        TaxesDto taxesDto = findById(id);
+        for(TaxesDto dto : dtoList){
+            if(dto.getId() == taxesDto.getId()){
+                dtoList.remove(dto);
+            }
+        }
+        return dtoList;
+    }
 }

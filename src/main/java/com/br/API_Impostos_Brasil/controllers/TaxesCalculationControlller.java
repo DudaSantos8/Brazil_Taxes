@@ -1,7 +1,6 @@
 package com.br.API_Impostos_Brasil.controllers;
 
 import com.br.API_Impostos_Brasil.controllers.dtos.CalculationTaxDto;
-import com.br.API_Impostos_Brasil.controllers.dtos.CalculationTaxResponseDto;
 import com.br.API_Impostos_Brasil.services.BrazilTaxesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

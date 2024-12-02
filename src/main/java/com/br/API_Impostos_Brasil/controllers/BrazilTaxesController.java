@@ -4,6 +4,7 @@ import com.br.API_Impostos_Brasil.controllers.dtos.TaxesDto;
 import com.br.API_Impostos_Brasil.controllers.dtos.TaxesRegisterDto;
 import com.br.API_Impostos_Brasil.services.BrazilTaxesService;
 import com.br.API_Impostos_Brasil.services.mappers.MapperTaxes;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public class BrazilTaxesController {
     private BrazilTaxesService service;
 
     @PostMapping
-    public ResponseEntity<?> regiterBrazilTaxes(@RequestBody TaxesRegisterDto registerDto){
+    public ResponseEntity<?> regiterBrazilTaxes(@RequestBody @Valid TaxesRegisterDto registerDto){
         try{
             return ResponseEntity.status(201).body(service.registerTax(MapperTaxes.parseToTaxesDto(registerDto)));
         }catch (Exception exception){
@@ -39,5 +40,14 @@ public class BrazilTaxesController {
     @GetMapping
     public List<TaxesDto> getAllTaxes(){
         return service.getAllTaxes();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteTaxesById(@PathVariable int id){
+        try {
+            return ResponseEntity.status(204).body(service.deleteTaxes(id));
+        }catch (Exception exception){
+            return ResponseEntity.status(404).build();
+        }
     }
 }

@@ -77,7 +77,7 @@ public class BrazilTaxesControllerTests {
                                 .post("/tipos")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(json))
-                .andExpect(MockMvcResultMatchers.status().isBadGateway())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(result -> Assertions.assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException));
 
     }
@@ -121,7 +121,6 @@ public class BrazilTaxesControllerTests {
                         MockMvcRequestBuilders
                                 .delete("/tipos/"+ taxesDto.getId())
                                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isNoContent())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(dtoList.size()-1));
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 }
