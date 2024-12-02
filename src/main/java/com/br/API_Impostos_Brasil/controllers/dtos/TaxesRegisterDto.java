@@ -15,7 +15,6 @@ public class TaxesRegisterDto {
     private String description;
 
     @NotNull(message = "this field cant be null")
-    @NotEmpty(message = "this field cant be empty")
     private float aliquota;
 
     public TaxesRegisterDto(String name, String description, float aliquota) {

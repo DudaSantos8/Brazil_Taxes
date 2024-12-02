@@ -53,7 +53,6 @@ public class BrazilTaxesServiceTests {
 
     @Test
     public void testCaseGetListOfTaxes(){
-        service.registerTax(taxesDto);
         List<TaxesDto> list = service.getAllTaxes();
         assertTrue(list.equals(dtoList));
     }
