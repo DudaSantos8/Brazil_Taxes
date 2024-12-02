@@ -4,7 +4,9 @@ import com.br.API_Impostos_Brasil.controllers.dtos.TaxesDto;
 import com.br.API_Impostos_Brasil.controllers.dtos.TaxesRegisterDto;
 import com.br.API_Impostos_Brasil.services.BrazilTaxesService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.xml.bind.ValidationException;
 import org.hamcrest.CoreMatchers;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -15,6 +17,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +67,21 @@ public class BrazilTaxesControllerTests {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.aliquota", CoreMatchers.is(12.0)));
     }
 
+    @Test
+    public void testCaseRegisterError() throws Exception {
+        TaxesRegisterDto registerDto = new TaxesRegisterDto("IPI", "", 12);
+        String json = mapper.writeValueAsString(registerDto);
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders
+                                .post("/tipos")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(json))
+                .andExpect(MockMvcResultMatchers.status().isBadGateway())
+                .andExpect(result -> Assertions.assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException));
+
+    }
+
     // tests for get by id and calculation
     @Test
     public void testCaseSearchTaxById() throws Exception {
@@ -80,18 +98,30 @@ public class BrazilTaxesControllerTests {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.aliquota", CoreMatchers.is(12.0)));
     }
 
-@Test
-public void testCaseGetAllTaxes() throws Exception {
-    Mockito.when(service.getAllTaxes()).thenReturn(dtoList);
+    @Test
+    public void testCaseGetAllTaxes() throws Exception {
+        Mockito.when(service.getAllTaxes()).thenReturn(dtoList);
 
-    mockMvc.perform(
-            MockMvcRequestBuilders
-                    .get("/tipos")
-                    .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(
+                MockMvcRequestBuilders
+                        .get("/tipos")
+                        .contentType(MediaType.APPLICATION_JSON))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(dtoList.size()))
             .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(dtoList.get(0).getId()))
             .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value(dtoList.get(0).getName()));
-}
+    }
+
+    @Test
+    public void testCaseDeleteTaxeById() throws Exception {
+        Mockito.when(service.deleteTaxes(taxesDto.getId())).thenReturn(dtoList);
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders
+                                .delete("/tipos/"+ taxesDto.getId())
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNoContent())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(dtoList.size()-1));
+    }
 }
